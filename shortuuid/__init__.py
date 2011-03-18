@@ -8,7 +8,8 @@ _ALPHABET = "23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 
 def encode(uuid):
     """
-    Encodes a UUID into a string according to the alphabet
+    Encodes a UUID into a string (LSB first) according to the alphabet
+    If leftmost (MSB) bits 0, string might be shorter
     """
     unique_id = uuid.int
     alphabet_length = len(_ALPHABET)
@@ -18,6 +19,19 @@ def encode(uuid):
         output.append(_ALPHABET[digit])
         unique_id = int(unique_id / alphabet_length)
     return "".join(output)
+
+def decode(string):
+    """
+    Decodes a string according to the current alphabet into a UUID
+    Raises ValueError when encountering illegal characters or too long string
+    If string too short, fills leftmost (MSB) bits with 0.
+    """
+    number = 0
+    for char in string[::-1]:
+        value = _ALPHABET.index(char)
+        number = number * len(_ALPHABET) + value
+    return _uu.UUID(int = number)
+
 
 def uuid(url=None):
     """
