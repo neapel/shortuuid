@@ -66,6 +66,21 @@ If the default 22 digits are too long for you, you can get shorter IDs by just
 truncating the string to the desired length. The IDs won't be universally unique
 any longer, but the probability of a collision will still be very low.
 
+To serialize existing UUIDs, use ``encode()`` and ``decode()``:
+
+>>> import uuid ; u = uuid.uuid4() ; u
+UUID('6ca4f0f8-2508-4bac-b8f1-5d1e3da2247a')
+>>> s = shortuuid.encode(u) ; s
+'cu8Eo9RyrUsV4MXEiDZpLM'
+>>> shortuuid.decode(s) == u
+True
+>>> short = s[:7] ; short
+'cu8Eo9R'
+>>> h = shortuuid.decode(short)
+UUID('00000000-0000-0000-0000-00b8c0b9f952')
+>>> shortuuid.decode(shortuuid.encode(short)) == short
+True
+
 License
 -------
 
